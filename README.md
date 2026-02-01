@@ -1,238 +1,113 @@
-📩 Spam Classifier with AI Explanation
-
-A production-ready Spam Classification system built using FastAPI, Machine Learning, and Large Language Models (LLMs), with a Streamlit web app for user-friendly interaction.
-
-This project not only classifies messages as Spam / Not Spam, but also explains why a message is spam and provides one clear safety recommendation, making the system transparent and practical for real-world use.
-
+📩 Spam Classifier with Explanation (FastAPI + Streamlit + LLM)
+An end-to-end Spam Detection system that not only classifies messages as Spam / Not Spam, but also explains the reasoning behind the prediction using a Large Language Model.
+________________________________________
 🚀 Live Demo
-🔗 FastAPI Backend (API)
-https://spam-classifier-api-uiiy.onrender.com
-
-🖥 Streamlit Web App (UI)
-https://spam-classifier-with-explanation.streamlit.app/
-
-
-The Streamlit app consumes the live FastAPI backend.
-
+🔗 Streamlit App
+👉 https://spam-classifier-with-explanation.streamlit.app/
+🔗 FastAPI Backend
+👉 https://spam-classifier-api-uiiy.onrender.com
+________________________________________
 🧠 Project Overview
-
-Most spam classifiers stop at returning a label.
-This project goes further by answering:
-
-Is this message spam?
-
-What type of spam is it?
-
-Why is it spam?
-
-What should the user do next?
-
-This makes the system suitable for real-world applications, not just demos.
-
-🏗 System Architecture
-User Input
-   ↓
-FastAPI (/spam/predict)
-   ↓
-ML Model (TF-IDF + Classifier)
-   ↓
-Prediction (Spam / Not Spam)
-   ↓
-FastAPI (/spam-explain/explain)
-   ↓
-LLM (LLaMA via ChatGroq)
-   ↓
-Human-readable Explanation + Advice
-   ↓
-Streamlit UI
-
-🔧 Tech Stack
-Backend
-
-FastAPI – High-performance REST API
-
-scikit-learn – Spam classification model
-
-NLTK – Text preprocessing
-
-Pickle – Model persistence
-
-AI Explanation Layer
-
-LangChain
-
-ChatGroq (LLaMA-3.1) – Explanation & advice generation
-
-Frontend
-
-Streamlit – Interactive web application
-
-Deployment
-
-Render – FastAPI backend
-
-Streamlit Cloud – UI hosting
-
-📁 Project Structure
-spam_classifier/
-│
-├── main.py
-├── model.pkl
-├── vectorizer.pkl
-├── requirements.txt
-│
-├── routers/
-│   ├── spam_router.py
-│   └── spam_explain_router.py
-│
-├── models/
-│   └── spam_model.py
-│
-└── streamlit_app/
-    └── app.py
-
-🔌 API Usage
+This project combines:
+•	A traditional Machine Learning classifier for accurate spam detection
+•	A Large Language Model (LLM) to provide human-friendly explanations and advice
+Why this approach?
+•	ML models are fast and reliable for classification
+•	LLMs make predictions explainable and user-friendly
+________________________________________
+🧪 Spam Classification Model
+📌 Model Used
+Multinomial Naive Bayes
+This model is trained on processed SMS/Email text using TF-IDF vectorization, making it highly effective for text classification tasks.
+📊 Model Performance
+Metric	Score
+Accuracy	0.9822
+Precision	0.99
+Recall	0.8534
+F1-Score	0.9167
+✔ High precision ensures very few false spam alerts
+✔ Strong recall ensures most spam messages are caught
+________________________________________
+🤖 Large Language Model (LLM) for Explanation
+📌 Model Used
+LLaMA-3.1-8B-Instant
+The LLM is used after classification to:
+•	Explain why a message is spam or not
+•	Identify the type of spam (phishing, promotion, scam, etc.)
+•	Provide one practical safety suggestion
+🧠 Why LLaMA-3.1-8B-Instant?
+•	Excellent reasoning and instruction following
+•	Fast inference for real-time APIs
+•	Generates clear, concise, and contextual explanations
+•	Ideal for Explainable AI (XAI) use cases
+________________________________________
+🔄 System Workflow
+1.	User enters a message
+2.	Text is preprocessed (tokenization, stopwords removal, stemming)
+3.	Multinomial Naive Bayes predicts → Spam / Not Spam
+4.	Prediction + message are sent to LLaMA-3.1-8B-Instant
+5.	User receives:
+o	Classification result
+o	Explanation
+o	One safety recommendation
+________________________________________
+🧩 API Endpoints
 1️⃣ Spam Prediction
-
-Endpoint
-
 POST /spam/predict
-
-
 Request
-
 {
-  "text": "Win ₹10,00,000 now! Click here"
+  "text": "Congratulations! You have won a free prize"
 }
-
-
 Response
-
 {
-  "text": "Win ₹10,00,000 now! Click here",
+  "text": "Congratulations! You have won a free prize",
   "prediction": "Spam"
 }
-
-2️⃣ Spam Explanation (LLM-powered)
-
-Endpoint
-
-POST /spam-explain/explain
-
-
-Request
-
-{
-  "text": "Win ₹10,00,000 now! Click here",
-  "prediction": "Spam"
-}
-
-
-Response
-
-{
-  "prediction": "Spam",
-  "explanation": "This is a lottery scam designed to create urgency and lure users into clicking unsafe links. Avoid interacting with such messages and block the sender immediately."
-}
-
-🖥 Streamlit App Features
-
-The Streamlit web app provides:
-
-📝 Text input for messages
-
-🔍 Spam / Not Spam prediction
-
-🧠 AI-generated explanation
-
-📌 Clear, readable output
-
-🔗 Live App:
-https://spam-classifier-with-explanation.streamlit.app/
-
-⚠️ Important Technical Notes
-scikit-learn Version Compatibility
-
-The ML model was trained using:
-
-scikit-learn==1.6.1
-
-
-For reliable inference, the same version must be used during deployment.
-
-NLTK Resources
-
-The backend automatically ensures the availability of:
-
-punkt
-
-punkt_tab
-
-stopwords
-
-🔐 Environment Variables
-
-Create a .env file for local development:
-
-GROQ_API_KEY=your_groq_api_key
-
-
-This key is required for AI-based explanation generation.
-
-📊 Model Details
-
-Vectorization: TF-IDF
-
-Classifier: Tree-based ensemble model
-
-Output Labels:
-
-Spam
-
-Not Spam
-
-The model is optimized for practical spam detection, not toy datasets.
-
-✨ Key Highlights
-
-✅ End-to-end ML + LLM pipeline
-
-✅ Explainable AI output
-
-✅ Production-ready API
-
-✅ Clean UI for non-technical users
-
-✅ Real deployment debugging handled
-
-🚀 Future Improvements
-
-Prediction confidence scores
-
-Multilingual spam detection
-
-Transformer-based spam classifier
-
-User history & analytics
-
-Dockerized deployment
-
-👨‍💻 Author
-
+________________________________________
+2️⃣ Spam Explanation
+POST /spam/explain
+Input
+•	User message
+•	Model prediction
+Output
+•	Type of spam
+•	Reason for classification
+•	One helpful advice
+________________________________________
+🖥️ Streamlit App Features
+•	Clean UI for user input
+•	Displays:
+o	🔹 Spam / Not Spam prediction
+o	🔹 LLM-generated explanation
+•	Uses live FastAPI backend
+•	Beginner-friendly and responsive
+________________________________________
+🛠 Tech Stack
+•	Backend: FastAPI
+•	Frontend: Streamlit
+•	ML Model: Multinomial Naive Bayes
+•	Vectorization: TF-IDF
+•	LLM: LLaMA-3.1-8B-Instant
+•	NLP: NLTK
+•	Deployment:
+o	API → Render
+o	App → Streamlit Cloud
+________________________________________
+📌 Key Highlights
+✔ High-accuracy spam detection
+✔ Explainable AI output
+✔ Real-time API + UI
+✔ Production-ready architecture
+✔ Clear separation of ML and LLM layers
+________________________________________
+📬 Future Improvements
+•	Add confidence scores
+•	Multi-language spam detection
+•	User feedback loop
+•	Model retraining pipeline
+________________________________________
+👤 Author
 Alekhya Chatterjee
-Machine Learning & AI Developer
-Focused on building practical, explainable AI systems.
+If you found this useful, feel free to ⭐ the repository!
 
-⭐ Final Note
 
-This project demonstrates:
-
-Real-world ML deployment
-
-API-first backend design
-
-Explainable AI integration
-
-Debugging production issues end-to-end
-
-If you found this useful, feel free to ⭐ the repository or build upon it.
